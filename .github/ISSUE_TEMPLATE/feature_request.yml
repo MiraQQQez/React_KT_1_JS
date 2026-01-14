@@ -1,0 +1,29 @@
+name: "Фича"
+description: "Предложить улучшение"
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: "Опиши, что хочешь улучшить и зачем."
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: "Идея"
+      placeholder: "Например: добавить страницу профиля пользователя"
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: "Зачем это нужно?"
+      description: "Какая польза/проблема решается"
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: "Доп. детали"
+      description: "Ссылки, примеры, макеты"

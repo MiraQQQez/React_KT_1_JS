@@ -1,0 +1,38 @@
+name: "Баг"
+description: "Сообщить об ошибке"
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: "Спасибо! Опиши проблему максимально конкретно."
+
+  - type: textarea
+    id: what_happened
+    attributes:
+      label: "Что произошло?"
+      description: "Кратко и по делу"
+      placeholder: "Например: при клике на кнопку приложение падает"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: "Шаги для воспроизведения"
+      description: "1) ... 2) ... 3) ..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: "Ожидаемое поведение"
+    validations:
+      required: true
+
+  - type: input
+    id: env
+    attributes:
+      label: "Окружение"
+      description: "ОС/браузер/версия Node (если важно)"
+      placeholder: "Windows 11, Chrome 120, Node 20"
