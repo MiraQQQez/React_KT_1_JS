@@ -7,7 +7,7 @@ type TeacherForStudentProps = {
 
 export const TeacherForStudent = ({ studentId }: TeacherForStudentProps) => {
   const teacherLabel = useSelector((state: RootState) => {
-    const student = state.students.find((s) => String(s.id) === String(studentId))
+    const student = state.students.students.find((s) => String(s.id) === String(studentId))
     if (!student) return 'anonym'
 
     const teacher = state.teachers.find((t) => t.name === student.teacher)

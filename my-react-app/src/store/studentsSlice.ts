@@ -1,4 +1,5 @@
 import { createSlice, nanoid, type PayloadAction } from '@reduxjs/toolkit'
+import type { RootState } from './store'
 
 export type StudentId = string | number
 export type VoteCode = 'GL' | 'TC'
@@ -20,27 +21,37 @@ export interface Student {
 
 export type StudentUpdate = Omit<Student, 'votes'>
 
+export interface StudentsState {
+  students: Student[]
+  status: string
+  error: string | null
+}
+
 // Начальное состояние слайса: список студентов
-const initialState: Student[] = [
-  {
-    id: 1,
-    name: 'Игорь',
-    surname: 'Иванов',
-    age: 20,
-    specialty: 'Frontend-разработка',
-    teacher: 'Преподаватель 1',
-    votes: { GL: 0, TC: 0 },
-  },
-  {
-    id: 2,
-    name: 'Анна',
-    surname: 'Петрова',
-    age: 21,
-    specialty: 'Backend-разработка',
-    teacher: 'Преподаватель 2',
-    votes: { GL: 0, TC: 0 },
-  },
-]
+const initialState: StudentsState = {
+  students: [
+    {
+      id: 1,
+      name: 'Игорь',
+      surname: 'Иванов',
+      age: 20,
+      specialty: 'Frontend-разработка',
+      teacher: 'Преподаватель 1',
+      votes: { GL: 0, TC: 0 },
+    },
+    {
+      id: 2,
+      name: 'Анна',
+      surname: 'Петрова',
+      age: 21,
+      specialty: 'Backend-разработка',
+      teacher: 'Преподаватель 2',
+      votes: { GL: 0, TC: 0 },
+    },
+  ],
+  status: 'idle',
+  error: null,
+}
 
 // Слайс students: хранит массив студентов
 const studentsSlice = createSlice({
@@ -49,7 +60,7 @@ const studentsSlice = createSlice({
   reducers: {
     studentAdded: {
       reducer(state, action: PayloadAction<Student>) {
-        state.push(action.payload)
+        state.students.push(action.payload)
       },
       prepare(name: string, surname: string, age: number, specialty: string, teacher: string) {
         return {
@@ -68,7 +79,7 @@ const studentsSlice = createSlice({
     studentUpdated(state, action: PayloadAction<StudentUpdate>) {
       const { id, name, surname, age, specialty, teacher } = action.payload
 
-      const existingStudent = state.find((student) => String(student.id) === String(id))
+      const existingStudent = state.students.find((student) => String(student.id) === String(id))
       if (existingStudent) {
         existingStudent.name = name
         existingStudent.surname = surname
@@ -80,7 +91,7 @@ const studentsSlice = createSlice({
     voteClicked(state, action: PayloadAction<{ studentId: StudentId; vote: VoteCode }>) {
       const { studentId, vote } = action.payload
 
-      const existingStudent = state.find((student) => String(student.id) === String(studentId))
+      const existingStudent = state.students.find((student) => String(student.id) === String(studentId))
       if (existingStudent) {
         existingStudent.votes[vote] += 1
       }
@@ -90,3 +101,10 @@ const studentsSlice = createSlice({
 
 export const { studentAdded, studentUpdated, voteClicked } = studentsSlice.actions
 export default studentsSlice.reducer
+
+export const selectAllStudents = (state: RootState) => state.students.students
+
+export const selectStudentById = (state: RootState, studentId: StudentId | undefined) => {
+  if (studentId === undefined || studentId === null) return undefined
+  return state.students.students.find((s) => String(s.id) === String(studentId))
+}

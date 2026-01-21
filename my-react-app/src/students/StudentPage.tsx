@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import { useAppSelector } from '../store/hooks'
+import { selectStudentById } from '../store/studentsSlice'
 import { TeacherForStudent } from './TeacherForStudent'
 import { UserVotes } from './UserVotes'
 
@@ -7,9 +8,7 @@ export const StudentPage = () => {
   const { studentId } = useParams()
 
   // Ищем студента по id из URL. Приводим к строке, т.к. id может быть числом или строкой (nanoid)
-  const student = useAppSelector((state) =>
-    state.students.find((s) => String(s.id) === String(studentId)),
-  )
+  const student = useAppSelector((state) => selectStudentById(state, studentId))
 
   if (!student) {
     return (

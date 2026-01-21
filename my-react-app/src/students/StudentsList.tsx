@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom'
 import { useAppSelector } from '../store/hooks'
+import { selectAllStudents } from '../store/studentsSlice'
 import { NewStudentForm } from './NewStudentForm'
 import { TeacherForStudent } from './TeacherForStudent'
 import { UserVotes } from './UserVotes'
 
 export const StudentsList = () => {
-  const students = useAppSelector((state) => state.students)
+  const students = useAppSelector(selectAllStudents)
 
   const dispStudents = students.map((student) => (
     <div key={student.id}>

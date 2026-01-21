@@ -1,16 +1,14 @@
 import { useEffect, useState, type ChangeEvent } from 'react'
 import { useParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
-import { studentUpdated } from '../store/studentsSlice'
+import { selectStudentById, studentUpdated } from '../store/studentsSlice'
 
 export const EditStudentForm = () => {
   const { studentId } = useParams()
   const dispatch = useAppDispatch()
 
   // Получаем текущего студента из store по id из URL
-  const student = useAppSelector((state) =>
-    state.students.find((s) => String(s.id) === String(studentId)),
-  )
+  const student = useAppSelector((state) => selectStudentById(state, studentId))
 
   const [name, setName] = useState('')
   const [surname, setSurname] = useState('')

@@ -15,7 +15,7 @@ export const UserVotes = ({ studentId }: UserVotesProps) => {
   const dispatch = useAppDispatch()
 
   const student = useAppSelector((state) =>
-    state.students.find((s) => String(s.id) === String(studentId)),
+    state.students.students.find((s) => String(s.id) === String(studentId)),
   )
 
   if (!student) return null
