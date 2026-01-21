@@ -56,13 +56,3 @@ npm run dev
 - `npm run preview` — предпросмотр сборки
 - `npm run lint` — проверка ESLint
 
-## Важно про файлы .js и .ts
-
-В уроках иногда фигурируют `server.js`, `db.js`, `client.js`.
-В этом репозитории **рабочая версия сделана на TypeScript**:
-
-- используется `my-react-app/src/server.ts`
-- используется `my-react-app/src/mocks/db.ts`
-- используется `my-react-app/src/api/client.ts`
-
-Если рядом остались одноимённые `.js` файлы — это старые заготовки/шаги миграции и их можно удалить, чтобы не путаться.
