@@ -1,4 +1,5 @@
-import { createSlice, nanoid, type PayloadAction } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { client } from '../api/client'
 import type { RootState } from './store'
 
 export type StudentId = string | number
@@ -15,11 +16,19 @@ export interface Student {
   surname: string
   age: number
   specialty: string
-  teacher: string
+  teacher: string | undefined
   votes: StudentVotes
 }
 
 export type StudentUpdate = Omit<Student, 'votes'>
+
+export type NewStudent = {
+  name: string
+  surname: string
+  age: number
+  specialty: string
+  teacher: string
+}
 
 export interface StudentsState {
   students: Student[]
@@ -53,29 +62,44 @@ const initialState: StudentsState = {
   error: null,
 }
 
+type FetchStudentsResponse = {
+  students: Student[]
+}
+
+type AddStudentResponse = {
+  student: Student
+}
+
+export const fetchStudents = createAsyncThunk(
+  'students/fetchStudents',
+  async () => {
+    const response = {
+      data: await client.get<FetchStudentsResponse>('/fakeServer/students'),
+    }
+
+    return response.data
+  },
+  {
+    condition: (_arg, { getState }) => {
+      const state = getState() as RootState
+      return state.students.status === 'idle'
+    },
+  },
+)
+
+export const addStudent = createAsyncThunk('students/addStudent', async (newStudent: NewStudent) => {
+  const response = {
+    data: await client.post<AddStudentResponse>('/fakeServer/students', newStudent),
+  }
+
+  return response.data
+})
+
 // Слайс students: хранит массив студентов
 const studentsSlice = createSlice({
   name: 'students',
   initialState,
   reducers: {
-    studentAdded: {
-      reducer(state, action: PayloadAction<Student>) {
-        state.students.push(action.payload)
-      },
-      prepare(name: string, surname: string, age: number, specialty: string, teacher: string) {
-        return {
-          payload: {
-            id: nanoid(),
-            name,
-            surname,
-            age,
-            specialty,
-            teacher,
-            votes: { GL: 0, TC: 0 },
-          } satisfies Student,
-        }
-      },
-    },
     studentUpdated(state, action: PayloadAction<StudentUpdate>) {
       const { id, name, surname, age, specialty, teacher } = action.payload
 
@@ -97,9 +121,26 @@ const studentsSlice = createSlice({
       }
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchStudents.pending, (state) => {
+        state.status = 'loading'
+      })
+      .addCase(fetchStudents.fulfilled, (state, action) => {
+        state.status = 'succeeded'
+        state.students = action.payload.students
+      })
+      .addCase(fetchStudents.rejected, (state, action) => {
+        state.status = 'failed'
+        state.error = action.error.message ?? 'Unknown error'
+      })
+      .addCase(addStudent.fulfilled, (state, action) => {
+        state.students.push(action.payload.student)
+      })
+  },
 })
 
-export const { studentAdded, studentUpdated, voteClicked } = studentsSlice.actions
+export const { studentUpdated, voteClicked } = studentsSlice.actions
 export default studentsSlice.reducer
 
 export const selectAllStudents = (state: RootState) => state.students.students

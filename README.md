@@ -9,7 +9,14 @@
 - **Redux Toolkit (studentsSlice)**
   - `initialState` хранит `{ students, status, error }`
   - добавлены селекторы `selectAllStudents`, `selectStudentById`
+  - добавлены thunk-и:
+    - `fetchStudents` (GET студентов)
+    - `addStudent` (POST добавления студента)
   - компоненты переведены на использование селекторов
+
+- **Redux Toolkit (teachersSlice)**
+  - `initialState` — пустой массив (данные приходят с сервера)
+  - добавлены thunk `fetchTeachers` и селекторы `selectAllTeachers`, `selectTeacherById`
 
 - **MSW (Mock Service Worker)**
   - подключён в `my-react-app/src/main.tsx` (стартует только в dev-режиме)
@@ -31,11 +38,24 @@
   - методы: `client`, `client.get`, `client.post`
   - базовый префикс API: `/fakeServer`
 
+- **React Router**
+  - страницы студентов: `/students`, `/students/:studentId`
+  - страницы преподавателей: `/teachers`, `/teachers/:teacherId`
+  - меню слева использует `NavLink` с подсветкой активной ссылки
+
 ## Эндпоинты мок-сервера
 
 - `GET /fakeServer/students`
   - возвращает `{ students: [...] }`
   - список берётся из `db.student.getAll()` и сериализуется через `serializeStudent`
+
+- `POST /fakeServer/students`
+  - принимает данные нового студента
+  - возвращает `{ student: {...} }` (созданный студент)
+
+- `GET /fakeServer/teachers`
+  - возвращает `{ teachers: [...] }`
+  - список берётся из `db.teacher.getAll()`
 
 ## Быстрый старт
 

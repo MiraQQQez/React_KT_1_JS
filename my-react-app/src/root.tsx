@@ -1,4 +1,4 @@
-import { Link, Outlet } from 'react-router-dom'
+import { NavLink, Outlet } from 'react-router-dom'
 
 export default function Root() {
   return (
@@ -8,7 +8,12 @@ export default function Root() {
       <div id="layout">
         <aside id="sidebar">
           <nav>
-            <Link to="/students">Students</Link>
+            <NavLink to="/students" className={({ isActive }) => (isActive ? 'active' : undefined)}>
+              Students
+            </NavLink>
+            <NavLink to="/teachers" className={({ isActive }) => (isActive ? 'active' : undefined)}>
+              Teachers
+            </NavLink>
           </nav>
         </aside>
         <main id="detail">

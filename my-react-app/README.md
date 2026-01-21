@@ -28,3 +28,5 @@ MSW стартует только в dev-режиме и перехватыва�
 Эндпоинты:
 
 - `GET /fakeServer/students` → `{ students: [...] }`
+- `POST /fakeServer/students` → `{ student: {...} }`
+- `GET /fakeServer/teachers` → `{ teachers: [...] }`

@@ -3,6 +3,8 @@ import Root from './root'
 import { StudentsList } from './students/StudentsList'
 import { StudentPage } from './students/StudentPage'
 import { EditStudentForm } from './students/EditStudentForm'
+import { TeachersList } from './teachers/TeachersList'
+import { TeacherPage } from './teachers/TeacherPage'
 
 const router = createBrowserRouter([
   {
@@ -17,6 +19,14 @@ const router = createBrowserRouter([
           { index: true, element: <StudentsList /> },
           { path: ':studentId', element: <StudentPage /> },
           { path: ':studentId/edit', element: <EditStudentForm /> },
+        ],
+      },
+      {
+        path: 'teachers',
+        element: <Outlet />,
+        children: [
+          { index: true, element: <TeachersList /> },
+          { path: ':teacherId', element: <TeacherPage /> },
         ],
       },
     ],

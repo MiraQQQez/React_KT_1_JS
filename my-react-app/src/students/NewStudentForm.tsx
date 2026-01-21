@@ -1,6 +1,6 @@
 import { useState, useEffect, type ChangeEvent } from 'react'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
-import { studentAdded } from '../store/studentsSlice'
+import { addStudent } from '../store/studentsSlice'
 
 export const NewStudentForm = () => {
   const [name, setName] = useState('')
@@ -8,6 +8,7 @@ export const NewStudentForm = () => {
   const [age, setAge] = useState<number>(0)
   const [specialty, setSpecialty] = useState('')
   const [teacher, setTeacher] = useState('')
+  const [requestStatus, setRequestStatus] = useState<'idle' | 'pending'>('idle')
   const teachersList = useAppSelector((state) => state.teachers)
   const dispatch = useAppDispatch()
 
@@ -29,15 +30,24 @@ export const NewStudentForm = () => {
     </option>
   ))
 
-  const onSaveStudentClick = () => {
-    if (name && surname && age && specialty && teacher) {
-      dispatch(studentAdded(name, surname, age, specialty, teacher))
+  const canBeSaved = Boolean(name) && Boolean(surname) && age > 0 && Boolean(specialty) && Boolean(teacher) && requestStatus === 'idle'
+
+  const onSaveStudentClick = async () => {
+    if (!canBeSaved) return
+
+    try {
+      setRequestStatus('pending')
+      await dispatch(addStudent({ name, surname, age, specialty, teacher })).unwrap()
 
       setName('')
       setSurname('')
       setAge(0)
       setSpecialty('')
       setTeacher('')
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setRequestStatus('idle')
     }
   }
 
@@ -87,7 +97,7 @@ export const NewStudentForm = () => {
             {teachersOptions}
           </select>
         </p>
-        <button type="button" onClick={onSaveStudentClick}>
+        <button type="button" onClick={onSaveStudentClick} disabled={!canBeSaved}>
           save
         </button>
       </form>
